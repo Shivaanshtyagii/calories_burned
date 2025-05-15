@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import pickle
-
+import os
 # Load model
 rfr = pickle.load(open('rfr.pkl', 'rb'))
 
@@ -26,3 +26,13 @@ Body_temp = st.number_input("Body Temperature (°C)", min_value=35.0, max_value=
 if st.button('Predict'):
     result = pred(Gender, Age, Height, Weight, Duration, Heart_rate, Body_temp)
     st.success(f"You have burned approximately {result:.2f} calories.")
+st.write("Current Working Directory:", os.getcwd())
+
+# Check if model file exists before loading
+model_path = os.path.join(os.getcwd(), "rfr.pkl")
+
+if os.path.exists(model_path):
+    with open(model_path, "rb") as f:
+        rfr = pickle.load(f)
+else:
+    st.error(f"Model file 'rfr.pkl' not found at {model_path}. Ensure it is correctly uploaded.")
